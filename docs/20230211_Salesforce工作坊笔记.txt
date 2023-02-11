@@ -1,0 +1,91 @@
+注册账号： https://developer.salesforce.com/signup
+
+
+入门学习及文档：Trailhead、Salesforce Developers、Developer Community。
+
+
+Salesforce应用场景：
+	CRM服务平台：开箱即用的客户关系管理系统。
+	商业应用提供商：支持platform代码开发/运行平台。（eg：用户界面、业务逻辑......）
+
+开发工具：前端（用户界面）、后端(业务逻辑/数据操作)、低代码工具。
+		  前端：Lightning Web Component; Visualforce; Aura。
+		  后端：Apex
+		  低代码工具：Flow Builder; Approval Process。
+
+
+Salesforce提供的工具有：
+		1、Data Loader & SOQL 数据库操作语言进行数据操作；
+		2、Data Loader & SOQL 数据库操作语言进行数据操作；
+		3、批量数据操作/查询/编写脚本模拟用户行为/触发任务运行......
+		
+Salesforce优势及局限性：
+	优势：开箱即用，可配置可二次开发; 
+	局限：平台资源的限制，开发的限制
+	
+Salesforce related: CRM, Sales, Service, Marketing...
+
+Salesforce生态：开发工具，应有尽有。
+                Salesforce可以被用于开发多种被不同角色使用的软件，而开发者只需了解Salesforce一个平台，还有非常丰富的第三方开发者提供的内容和应用。	
+		
+Salesforce平台有两类角色：管理员、开发者。
+
+扩展之Salesforce相关认证：
+1、Salesforce Administrator
+2、Salesforce Certified Platform Developer I
+3、Salesforce Certified Platform Developer II
+4、Salesforce Certified Platform App Builder
+5、Salesforce Certified Marketing Cloud Email Specialist
+
+关于 Salesforce Flow：快速配置的自动化平台。
+Salesforce Flow 是业内领先的低代码自动化平台。它让你可以通过点击和拖拽在Salesforce 平台上搭建自动化流程和页面。
+优点：易于配置；可视化展示；快速部署；轻松入门。
+附注：最终效果类似 流程图，有开始、审批节点、条件判定、结束。
+
+
+关于 Salesforce Apex: 类Java的后端语言。
+Salesforce Apex 是一个强类型的面对对象编程语言，帮助开发者在 Salesforce 平台上构建自己的流程和事务。它的语法与Java 近似，并提供了以对象形式操作数据库的语法。
+优点：易于上手；配合Salesforce无需管理运行；轻松调试；适用于复杂场景。
+
+——————————————————————————————————————————————————
+
+
+workshop 开发任务/动手实践：
+场景模拟：对公企业促销活动。使用Salesforce为一家2B业务的企业，基于已有的Salesforce历史数据，快速实现计算折扣，并将折扣显示在前端业务界面。
+
+
+任务总结：
+1、创建两个属性标签（Discount Amount、Discount Percentage），通过平台提供的组件及公式、自动创建折扣计算公式：Amount * (1 - Discount_Percentage__c)
+   备注：手动创建的 Discount_Percentage 会通过平台提供公式关联上 Discount_Percentage__c。
+
+2、通过低代码工具（Flow），自定义界面按钮 Calculate Discount。
+
+3、使用 Salesforce Flow，基于第二步中自定义按钮Calculate Discount，为它生成业务逻辑（Gold、Silver、Normal三类折扣），新建Flows流程图。
+
+4、使用 Salesforce Apex，新建Apex class，为第三步中的Flows创建流程运行时的业务逻辑执行审定（根据不同情况的折扣自动计算对应的折扣）。
+
+
+__________________________________________________
+Developer console
+File - New - Apex class
+
+public class OpportunityRepository {
+	@InvocableMethod
+	public static List<Decimal> getAccountLastYearRevenueByOpportunityId(List<Id> opportunityIds) {
+		List<Decimal> revenues = new List<Decimal> ();
+		revenues.add(OpportunityRepository.getAccountLastYearRevenueByOpportunityId(opportunityIds.get(0)));
+		return revenues;
+	}
+	public static Decimal getAccountLastYearRevenueByOpportunityId(Id opportunityId) {
+		Opportunity[] opportunities = [
+			SELECT Id, Account.AnnualRevenue
+			FROM Opportunity
+			WHERE Id = :opportunityId
+		];
+		return opportunities.get(0).Account.AnnualRevenue;
+	}
+}
+
+
+
+
